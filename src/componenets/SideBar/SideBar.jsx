@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import { Divider, List, ListItem, ListItemText, ListSubheader, ListItemIcon, Box, CircularProgress, Button } from '@mui/material';
+import { Divider, List, ListItem, ListItemText, ListSubheader, ListItemIcon, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
 import images from '../../assets';
 import { useGetGenresQuery } from '../../services/TMDB';
 import genreIcons from '../../assets/genres';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
+import { LoadingCircle } from '..';
 
 const categories = [
   { label: 'Popular', value: 'popular' },
@@ -16,10 +17,17 @@ const categories = [
 ];
 
 function SideBar({ setMobileOpen }) {
+  const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreOrCategory);
+
   const { data, isFetching } = useGetGenresQuery();
   const dispatch = useDispatch();
   const theme = useTheme();
   const classes = useStyles();
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [genreIdOrCategoryName]);
+
   return (
     <>
       <Link to="/" className={classes.imageLink}>
@@ -47,9 +55,7 @@ function SideBar({ setMobileOpen }) {
       <List>
         <ListSubheader>Genres</ListSubheader>
         {isFetching ? (
-          <Box display="flex" justifyContent="center">
-            <CircularProgress size="4rem" />
-          </Box>
+          <LoadingCircle />
         )
           : data.genres.map(({ name, id }) => (
             <Link key={name} className={classes.links} to="/">
