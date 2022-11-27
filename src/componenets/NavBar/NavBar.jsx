@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useStyles from './styles';
-import { SideBar } from '..';
+import { SideBar, Search } from '..';
 
 function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -30,7 +30,7 @@ function NavBar() {
           <IconButton color="inherit" sx={{ ml: 1 }} onClick={() => ({})}>
             {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
-          {!isMobile && 'Search...'}
+          {!isMobile && <Search />}
           <div>
             {!isAuthenticated ? (
               <Button
@@ -56,7 +56,7 @@ function NavBar() {
               </Button>
             )}
           </div>
-          {isMobile && 'Search...'}
+          {isMobile && <Search />}
         </Toolbar>
       </AppBar>
       <div>
