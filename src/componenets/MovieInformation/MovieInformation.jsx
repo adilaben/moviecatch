@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Button, ButtonGroup, Grid, Box, Rating } from '@mui/material';
+import { Typography, Button, ButtonGroup, Grid, Box, Rating, Modal } from '@mui/material';
 import { Movie as MovieIcon, Theaters, Language, PlusOne, Favorite, FavoriteBorderOutlined, Remove, ArrowBack } from '@mui/icons-material';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -159,6 +159,23 @@ function MovieInformation() {
           </Grid>
         )
         : null}
+      <Modal
+        closeAfterTransition
+        className={classes.modal}
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        {data?.videos?.results?.length > 0 && (
+          <iframe
+            autoPlay
+            className={classes.video}
+            frameBorder="0"
+            title="Trailer"
+            src={`https://www.youtube.com/embed/${data.videos.results[0].key}`}
+            allow="autoplay"
+          />
+        )}
+      </Modal>
 
     </>
   );
