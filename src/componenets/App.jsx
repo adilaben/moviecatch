@@ -14,7 +14,15 @@ function App() {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Routes>
-          <Route path="/" element={<Movies />} />
+          {['/', '/approved'].map((path, index) => (
+            <Route
+              path={path}
+              element={
+                <Movies />
+            }
+              key={index}
+            />
+          ))}
           <Route path="/movie/:id" element={<MovieInformation />} />
           <Route path="/actors/:id" element={<Actors />} />
           <Route path="/profile/:id" element={<Profile />} />
