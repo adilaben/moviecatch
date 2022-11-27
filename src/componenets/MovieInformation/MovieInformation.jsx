@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
-import { Typography, Button, ButtonGroup, Grid, Box, CircularProgress, Rating } from '@mui/material';
+import { Typography, Button, ButtonGroup, Grid, Box, Rating } from '@mui/material';
 import { Movie as MovieIcon, Theaters, Language, PlusOne, Favorite, FavoriteBorderOutlined, Remove, ArrowBack } from '@mui/icons-material';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import genreIcons from '../../assets/genres';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
-import { useGetMovieQuery } from '../../services/TMDB';
+import { useGetMovieQuery, useGetRecommendationsQuery } from '../../services/TMDB';
 import useStyles from './styles';
+import { MovieList, LoadingCircle } from '..';
 
 function MovieInformation() {
   const { id } = useParams();
   const { data, isFetching, error } = useGetMovieQuery(id);
+  const page = 1;
+  const { data: recommendations, isFetching: isRecommendationsFetching } = useGetRecommendationsQuery({ movie_id: id, list: '/recommendations', page });
 
   const classes = useStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+
+  console.log(recommendations);
 
   const [isMovieFavorited, setIsMovieFavorited] = useState(false);
   const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
@@ -27,12 +32,8 @@ function MovieInformation() {
 
   };
 
-  if (isFetching) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center">
-        <CircularProgress size="8rem" />
-      </Box>
-    );
+  if (isFetching || isRecommendationsFetching) {
+    return (<LoadingCircle />);
   }
 
   if (error) {
@@ -42,11 +43,10 @@ function MovieInformation() {
       </Box>
     );
   }
-  console.log(data);
   return (
     <>
       <Grid container className={classes.containerSpaceAround}>
-        <Grid style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '30px' }} item sm={12} lg={4}>
+        <Grid style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: ' center', marginBottom: '30px' }} item sm={12} lg={4}>
           <img
             className={classes.poster}
             src={`https://image.tmdb.org/t/p/w500/${data?.poster_path}`}
@@ -85,7 +85,7 @@ function MovieInformation() {
           <Typography style={{ marginBottom: '1rem' }}>{data?.overview}</Typography>
           <Grid item container>
             <div className={classes.buttonsContainer}>
-              <Grid style={{ marginTop: '10px' }} itemclassName={classes.buttonsContainer}>
+              <Grid style={{ marginTop: '10px' }} item className={classes.buttonsContainer}>
                 <ButtonGroup size="small" variant="outlined">
                   <Button target="_blank" rel="noopener noreferrer" href={data?.homepage} endIcon={<Language />}>
                     Website
@@ -126,7 +126,7 @@ function MovieInformation() {
         </Grid>
 
       </Grid>
-      <Typography style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '30px' }} variant="h4" gutterBottom>Top Cast</Typography>
+      <Typography style={{ marginTop: '10px' }} variant="h4" gutterBottom align="center">Top Cast</Typography>
       <Grid item container spacing={2}>
         {data && data.credits?.cast?.map((character, i) => (
           character.profile_path && (
@@ -148,6 +148,18 @@ function MovieInformation() {
           )
         )).slice(0, 12)}
       </Grid>
+
+      {recommendations?.results?.length
+        ? (
+          <Grid>
+            <Typography style={{ marginTop: '10px' }} variant="h4" gutterBottom align="center">
+              You might also like
+            </Typography>
+            <MovieList movies={recommendations} numberOfMovies={12} />
+          </Grid>
+        )
+        : null}
+
     </>
   );
 }
