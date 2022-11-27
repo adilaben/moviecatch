@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import App from './componenets/App';
 import store from './app/store';
+import './index.css';
 
 const theme = createTheme({});
 
