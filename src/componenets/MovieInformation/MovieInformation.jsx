@@ -1,34 +1,65 @@
-import React, { useState } from 'react';
-import { Typography, Button, ButtonGroup, Grid, Box, Rating, Modal } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Typography, Button, ButtonGroup, Grid, Box, Rating, Modal, Tooltip } from '@mui/material';
 import { Movie as MovieIcon, Theaters, Language, PlusOne, Favorite, FavoriteBorderOutlined, Remove, ArrowBack } from '@mui/icons-material';
 import { Link, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import genreIcons from '../../assets/genres';
 import images from '../../assets';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
-import { useGetMovieQuery, useGetRecommendationsQuery } from '../../services/TMDB';
+import { useGetMovieQuery, useGetRecommendationsQuery, useGetListQuery } from '../../services/TMDB';
 import useStyles from './styles';
 import { MovieList, LoadingCircle, Pagination } from '..';
+import { userSelector } from '../../features/auth';
 
 function MovieInformation() {
   const { id } = useParams();
-  const { data, isFetching, error } = useGetMovieQuery(id);
+  const { user } = useSelector(userSelector);
   const [page, setPage] = useState(1);
-  const { data: recommendations, isFetching: isRecommendationsFetching } = useGetRecommendationsQuery({ movie_id: id, list: '/recommendations', page });
-
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
+
+  const { data, isFetching, error } = useGetMovieQuery(id);
+  const { data: favoriteMovies } = useGetListQuery({ listName: 'favorite/movies', accountId: user.Id, sessionId: localStorage.getItem('session_id'), page: 1 });
+  const { data: watchlistMovies } = useGetListQuery({ listName: 'watchlist/movies', accountId: user.Id, sessionId: localStorage.getItem('session_id'), page: 1 });
+  const { data: recommendations, isFetching: isRecommendationsFetching } = useGetRecommendationsQuery({ movie_id: id, list: '/recommendations', page });
 
   const [isMovieFavorited, setIsMovieFavorited] = useState(false);
   const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
 
-  const addToFavorites = () => {
+  useEffect(() => {
+    setIsMovieFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === data?.id));
+  }, [favoriteMovies, data]);
 
+  useEffect(() => {
+    setIsMovieWatchlisted(!!watchlistMovies?.results?.find((movie) => movie?.id === data?.id));
+  }, [watchlistMovies, data]);
+
+  const addToFavorites = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${user.id}/favorite?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session_id')}`,
+      {
+        media_type: 'movie',
+        media_id: id,
+        favorite: !isMovieFavorited,
+      },
+    );
+
+    setIsMovieFavorited((prev) => !prev);
   };
 
-  const addToWatchlist = () => {
+  const addToWatchlist = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${user.id}/watchlist?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session_id')}`,
+      {
+        media_type: 'movie',
+        media_id: id,
+        watchlist: !isMovieWatchlisted,
+      },
+    );
 
+    setIsMovieWatchlisted((prev) => !prev);
   };
 
   if (isFetching || isRecommendationsFetching) {
@@ -61,7 +92,7 @@ function MovieInformation() {
           </Typography>
           <Grid item className={classes.containerSpaceAround}>
             <Box display="flex" align="center">
-              <Rating readOnly value={data?.vote_average / 2} />
+              <Rating readOnly value={data?.vote_average && data.vote_average / 2} />
               <Typography variant="subtitle1" gutterBottom style={{ marginLeft: '10px' }}>
                 {data?.vote_average} / 10
               </Typography>
@@ -71,7 +102,7 @@ function MovieInformation() {
             </Typography>
           </Grid>
           <Grid item className={classes.genresContainer}>
-            {data?.genres?.map((genre, i) => (
+            {data?.genres?.map((genre) => (
               <Link key={genre.name} className={classes.links} to="/" onClick={() => dispatch(selectGenreOrCategory(genre.id))}>
                 <img src={genreIcons[genre.name.toLowerCase()]} className={classes.genreImage} height={30} />
                 <Typography color="textPrimary" variant="subtitle1">
@@ -98,21 +129,29 @@ function MovieInformation() {
                 </ButtonGroup>
               </Grid>
               <Grid style={{ marginTop: '10px' }} item className={classes.buttonsContainer}>
+
                 <ButtonGroup size="small" variant="outlined">
-                  <Button
-                    onClick={addToFavorites}
-                    endIcon={isMovieFavorited
-                      ? <FavoriteBorderOutlined /> : <Favorite />}
-                  >
-                    {isMovieFavorited ? 'Unfavorite' : 'Favorite'}
-                  </Button>
-                  <Button
-                    onClick={addToWatchlist}
-                    endIcon={isMovieWatchlisted
-                      ? <Remove /> : <PlusOne />}
-                  >
-                    Watchlist
-                  </Button>
+
+                  <Tooltip disableTouchListener title={!user.id && 'Please login first!'}>
+
+                    <Button
+                      onClick={addToFavorites}
+                      endIcon={isMovieFavorited
+                        ? <FavoriteBorderOutlined /> : <Favorite />}
+                    >
+                      {isMovieFavorited ? 'Unfavorite' : 'Favorite'}
+                    </Button>
+                  </Tooltip>
+                  <Tooltip disableTouchListener title={!user.id && 'Please login first!'}>
+
+                    <Button
+                      onClick={addToWatchlist}
+                      endIcon={isMovieWatchlisted
+                        ? <Remove /> : <PlusOne />}
+                    >
+                      Watchlist
+                    </Button>
+                  </Tooltip>
                   <Button sx={{ borderColor: 'primary.main' }} endIcon={<ArrowBack />}>
                     <Typography component={Link} to="/" color="inherit" variant="subtitle2" style={{ textDecoration: 'none' }}>
                       Back
