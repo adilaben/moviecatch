@@ -148,24 +148,25 @@ function MovieInformation() {
           )
         )).slice(0, 12)}
       </Grid>
-
-      {recommendations?.results?.length
-        ? (
-          <Grid>
-            <Typography style={{ marginTop: '10px' }} variant="h4" gutterBottom align="center">
-              You might also like
-            </Typography>
-            <MovieList movies={recommendations} numberOfMovies={12} />
-          </Grid>
-        )
-        : null}
+      <Box>
+        {recommendations?.results?.length
+          ? (
+            <Grid>
+              <Typography style={{ marginTop: '10px' }} variant="h4" gutterBottom align="center">
+                You might also like
+              </Typography>
+              <MovieList movies={recommendations} numberOfMovies={12} />
+            </Grid>
+          )
+          : null}
+      </Box>
       <Modal
         closeAfterTransition
         className={classes.modal}
         open={open}
         onClose={() => setOpen(false)}
       >
-        {data?.videos?.results?.length > 0 && (
+        {data?.videos?.results?.length > 0 ? (
           <iframe
             autoPlay
             className={classes.video}
@@ -174,7 +175,7 @@ function MovieInformation() {
             src={`https://www.youtube.com/embed/${data.videos.results[0].key}`}
             allow="autoplay"
           />
-        )}
+        ) : <>No Video</>}
       </Modal>
 
     </>
