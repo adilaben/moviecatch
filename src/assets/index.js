@@ -7,6 +7,8 @@ import bluePopcorn from './bluePopcorn.png';
 import redNotFound from './redNotFound.png';
 import blueNotFound from './blueNotFound.png';
 
+import posterNotFound from './posterNotFound.png';
+
 export default {
   blueLogo,
   redLogo,
@@ -14,4 +16,5 @@ export default {
   bluePopcorn,
   redNotFound,
   blueNotFound,
+  posterNotFound,
 };

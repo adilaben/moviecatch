@@ -4,22 +4,21 @@ import { Movie as MovieIcon, Theaters, Language, PlusOne, Favorite, FavoriteBord
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import genreIcons from '../../assets/genres';
+import images from '../../assets';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import { useGetMovieQuery, useGetRecommendationsQuery } from '../../services/TMDB';
 import useStyles from './styles';
-import { MovieList, LoadingCircle } from '..';
+import { MovieList, LoadingCircle, Pagination } from '..';
 
 function MovieInformation() {
   const { id } = useParams();
   const { data, isFetching, error } = useGetMovieQuery(id);
-  const page = 1;
+  const [page, setPage] = useState(1);
   const { data: recommendations, isFetching: isRecommendationsFetching } = useGetRecommendationsQuery({ movie_id: id, list: '/recommendations', page });
 
   const classes = useStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-
-  console.log(recommendations);
 
   const [isMovieFavorited, setIsMovieFavorited] = useState(false);
   const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
@@ -49,13 +48,13 @@ function MovieInformation() {
         <Grid style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: ' center', marginBottom: '30px' }} item sm={12} lg={4}>
           <img
             className={classes.poster}
-            src={`https://image.tmdb.org/t/p/w500/${data?.poster_path}`}
+            src={data?.poster_path ? `https://image.tmdb.org/t/p/w500/${data?.poster_path}` : images.posterNotFound}
             alt={data?.title}
           />
         </Grid>
         <Grid item container direction="column" lg={7}>
           <Typography variant="h4" align="center" gutterBottom>
-            {data?.title} ({data.release_date.split('-')[0]})
+            {data?.title} ({data?.release_date.split('-')[0]})
           </Typography>
           <Typography variant="h6" align="center" gutterBottom>
             {data?.tagline}
@@ -68,7 +67,7 @@ function MovieInformation() {
               </Typography>
             </Box>
             <Typography variant="h6" gutterBottom align="center">
-              {data?.runtime}min | Language: {data?.spoken_languages[0].name}
+              {data?.runtime}min | Language: {data?.spoken_languages[0]?.name}
             </Typography>
           </Grid>
           <Grid item className={classes.genresContainer}>
@@ -126,9 +125,10 @@ function MovieInformation() {
         </Grid>
 
       </Grid>
-      <Typography style={{ marginTop: '10px' }} variant="h4" gutterBottom align="center">Top Cast</Typography>
+      {data?.credits?.cast?.length ? <Typography style={{ marginTop: '15px' }} variant="h4" gutterBottom align="center">Top Cast</Typography>
+        : null}
       <Grid item container spacing={2}>
-        {data && data.credits?.cast?.map((character, i) => (
+        {data && data?.credits?.cast?.map((character, i) => (
           character.profile_path && (
           <Grid
             key={i}
@@ -156,6 +156,8 @@ function MovieInformation() {
                 You might also like
               </Typography>
               <MovieList movies={recommendations} numberOfMovies={12} />
+              <Pagination currentPage={page} totalPages={recommendations?.total_pages} setPage={setPage} />
+
             </Grid>
           )
           : null}

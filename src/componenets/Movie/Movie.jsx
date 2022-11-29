@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Grid, Grow, Tooltip, Rating } from '@mui/material';
 import { Link } from 'react-router-dom';
+import images from '../../assets';
 
 import useStyles from './styles';
 
@@ -15,7 +16,7 @@ function Movie({ movie, i }) {
             alt={movie.title}
             className={classes.image}
             src={movie.poster_path
-              ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}` : 'https://www.fillmurray.com/200/300'}
+              ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}` : images.posterNotFound}
           />
           <Typography className={classes.title} variant="h6">{movie.title}</Typography>
           <Tooltip disableTouchListener title={`${movie.vote_average} / 10`}>

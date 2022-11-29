@@ -4,7 +4,7 @@ import { Typography, Button, Grid, Box, Divider } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useGetActorDetailsQuery, useGetMoviesByActorIdQuery } from '../../services/TMDB';
 import useStyles from './styles';
-import { MovieList, LoadingCircle } from '..';
+import { MovieList, LoadingCircle, Pagination } from '..';
 import getAge from '../../utils/getAge';
 
 function Actors() {
@@ -84,13 +84,14 @@ function Actors() {
       </Grid>
       <Divider style={{ marginTop: '5px' }} />
 
-      {movies.results.length
+      {movies?.results?.length
         ? (
           <Grid>
             <Typography style={{ marginTop: '10px' }} variant="h4" gutterBottom align="center">
               Movies
             </Typography>
             <MovieList movies={movies} numberOfMovies={12} />
+            <Pagination currentPage={page} totalPages={movies?.total_pages} setPage={setPage} />
           </Grid>
         )
         : null}

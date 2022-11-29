@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/styles';
 import images from '../../assets';
 import { useGetMoviesQuery } from '../../services/TMDB';
-import { MovieList, LoadingCircle } from '..';
+import { MovieList, LoadingCircle, Pagination } from '..';
 
 function Movies() {
   const [page, setPage] = useState(1);
@@ -12,6 +12,9 @@ function Movies() {
   const { data, error, isFetching } = useGetMoviesQuery({ genreIdOrCategoryName, page, searchQuery });
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width:600px)');
+  const lg = useMediaQuery((theme) => theme.breakpoints.only('lg'));
+
+  const numberOfMovies = lg ? 16 : 18;
 
   if (isFetching) {
     return (
@@ -34,7 +37,10 @@ function Movies() {
 
   if (error) return 'An error has occured.';
   return (
-    <div><MovieList movies={data} /></div>
+    <div>
+      <MovieList movies={data} numberOfMovies={numberOfMovies} />
+      <Pagination currentPage={page} totalPages={data?.total_pages} setPage={setPage} />
+    </div>
   );
 }
 
