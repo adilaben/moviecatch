@@ -10,3 +10,4 @@ export { default as Profile } from './Profile/Profile';
 export { default as Pagination } from './Pagination/Pagination';
 export { default as LoadingCircle } from './LoadingCircle/LoadingCircle';
 export { default as RatedCards } from './RatedCards/RatedCards';
+export { default as FeaturedMovies } from './FeaturedMovies/FeaturedMovies';

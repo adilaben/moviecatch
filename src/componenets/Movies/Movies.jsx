@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/styles';
 import images from '../../assets';
 import { useGetMoviesQuery } from '../../services/TMDB';
-import { MovieList, LoadingCircle, Pagination } from '..';
+import { MovieList, LoadingCircle, Pagination, FeaturedMovies } from '..';
 
 function Movies() {
   const [page, setPage] = useState(1);
@@ -38,6 +38,7 @@ function Movies() {
   if (error) return 'An error has occured.';
   return (
     <div>
+      <FeaturedMovies movies={data.results.slice(0, 3)} />
       <MovieList movies={data} numberOfMovies={numberOfMovies} />
       <Pagination currentPage={page} totalPages={data?.total_pages} setPage={setPage} />
     </div>
