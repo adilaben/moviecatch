@@ -63,6 +63,9 @@ export default makeStyles((theme) => ({
       maxWidth: '200px',
     },
   },
+  buttonGrp: {
+    color: theme.palette.mode === 'light' ? '#397DD6' : '#BF151D',
+  },
   title: {
     color: theme.palette.text.primary,
     marginTop: '10px',

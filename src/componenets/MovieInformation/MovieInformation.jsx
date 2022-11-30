@@ -98,7 +98,7 @@ function MovieInformation() {
               </Typography>
             </Box>
             <Typography variant="h6" gutterBottom align="center">
-              {data?.runtime}min | Language: {data?.spoken_languages[0]?.name}
+              {data?.runtime} min | Language: {data?.spoken_languages[0]?.name}
             </Typography>
           </Grid>
           <Grid item className={classes.genresContainer}>
@@ -116,7 +116,12 @@ function MovieInformation() {
           <Grid item container>
             <div className={classes.buttonsContainer}>
               <Grid style={{ marginTop: '10px' }} item className={classes.buttonsContainer}>
-                <ButtonGroup size="small" variant="outlined">
+                <ButtonGroup
+                  size="small"
+                  color="inherit"
+                  variant="outlined"
+                  className={classes.buttonGrp}
+                >
                   <Button target="_blank" rel="noopener noreferrer" href={data?.homepage} endIcon={<Language />}>
                     Website
                   </Button>
@@ -130,7 +135,12 @@ function MovieInformation() {
               </Grid>
               <Grid style={{ marginTop: '10px' }} item className={classes.buttonsContainer}>
 
-                <ButtonGroup size="small" variant="outlined">
+                <ButtonGroup
+                  size="small"
+                  color="inherit"
+                  variant="outlined"
+                  className={classes.buttonGrp}
+                >
 
                   <Tooltip disableTouchListener title={!user.id && 'Please login first!'}>
 
@@ -152,7 +162,7 @@ function MovieInformation() {
                       Watchlist
                     </Button>
                   </Tooltip>
-                  <Button sx={{ borderColor: 'primary.main' }} endIcon={<ArrowBack />}>
+                  <Button endIcon={<ArrowBack />}>
                     <Typography component={Link} to="/" color="inherit" variant="subtitle2" style={{ textDecoration: 'none' }}>
                       Back
                     </Typography>

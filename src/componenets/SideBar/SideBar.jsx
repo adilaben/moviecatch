@@ -18,18 +18,17 @@ const categories = [
 
 function SideBar({ setMobileOpen }) {
   const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreOrCategory);
-
-  const { data, isFetching } = useGetGenresQuery();
-  const dispatch = useDispatch();
   const theme = useTheme();
   const classes = useStyles();
+  const { data, isFetching } = useGetGenresQuery();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setMobileOpen(false);
   }, [genreIdOrCategoryName]);
 
   return (
-    <>
+    <div className={classes.sideBarContainer}>
       <Link to="/" className={classes.imageLink}>
         <img
           className={classes.image}
@@ -40,11 +39,11 @@ function SideBar({ setMobileOpen }) {
       <Divider />
       <List>
         <ListSubheader>Categories</ListSubheader>
-        {categories.map(({ label, value }) => (
+        { categories.map(({ label, value }) => (
           <Link key={value} className={classes.links} to="/">
             <ListItem onClick={() => dispatch(selectGenreOrCategory(value))} button>
               <ListItemIcon>
-                <img src={genreIcons[label.toLowerCase()]} className={classes.genreImages} height={30} />
+                <img src={genreIcons[label.toLowerCase()]} className={classes.genreImage} height={30} />
               </ListItemIcon>
               <ListItemText primary={label} />
             </ListItem>
@@ -56,23 +55,22 @@ function SideBar({ setMobileOpen }) {
         <ListSubheader>Genres</ListSubheader>
         {isFetching ? (
           <LoadingCircle />
-        )
-          : data.genres.map(({ name, id }) => (
-            <Link key={name} className={classes.links} to="/">
-              <ListItem onClick={() => dispatch(selectGenreOrCategory(id))} button>
-                <ListItemIcon>
-                  <img src={genreIcons[name.toLowerCase()]} className={classes.genreImages} height={30} />
-                </ListItemIcon>
-                <ListItemText primary={name} />
-              </ListItem>
-            </Link>
-          ))}
+        ) : data.genres.map(({ name, id }) => (
+          <Link key={name} className={classes.links} to="/">
+            <ListItem onClick={() => dispatch(selectGenreOrCategory(id))} button>
+              <ListItemIcon>
+                <img src={genreIcons[name.toLowerCase()]} className={classes.genreImage} height={30} />
+              </ListItemIcon>
+              <ListItemText primary={name} />
+            </ListItem>
+          </Link>
+        ))}
       </List>
       <Divider />
       <div className={classes.copyright}>
-        <p className="p-text">{(new Date().getFullYear())} &copy; <Button target="_blank" style={{ padding: '0', color: '#575d60' }} href="https://www.linkedin.com/in/aadila-bendahou/">Aâdila Bendahou</Button> <br />All rights reserved.</p>
+        <p className="p-text">{(new Date().getFullYear())} &copy; <Button target="_blank" style={{ padding: '0', color: '#575d60' }} href="https://www.linkedin.com/in/aadila-bendahou/">Aâdila Bendahou</Button> <br />All rights reserved</p>
       </div>
-    </>
+    </div>
   );
 }
 
