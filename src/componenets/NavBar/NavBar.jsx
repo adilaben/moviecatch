@@ -81,8 +81,12 @@ function NavBar() {
           {!isMobile && <Search />}
           <div>
             {!isAuthenticated ? (
-              <Button color="inherit" onClick={fetchToken}>
-                Login &nbsp; <AccountCircle />
+              <Button
+                style={{ minWidth: "0", padding: "0" }}
+                color="inherit"
+                onClick={fetchToken}
+              >
+                {!isMobile && "Login"} &nbsp; <AccountCircle />
               </Button>
             ) : (
               <Button
@@ -91,6 +95,7 @@ function NavBar() {
                 to={`/profile/${user.id}`}
                 className={classes.linkButton}
                 onClick={() => {}}
+                style={{ minWidth: "0", padding: "0" }}
               >
                 {!isMobile && <> {user.username} &nbsp;</>}
                 <Avatar
