@@ -9,21 +9,20 @@ import {
   selectGenreOrCategory,
 } from "../features/currentGenreOrCategory";
 
-function useAlan(alanBtnContainer) {
+function useAlan() {
   const { setMode } = useContext(ColorModeContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    var greetingWasSaid = false;
-
-    const alanBtnInstance = alanBtn({
+    alanBtn({
       key: process.env.REACT_APP_ALAN_KEY,
       onCommand: ({ command, mode, genres, genreOrCategory, query }) => {
         if (command === "chooseGenre") {
           const foundGenre = genres.find(
             (g) => g.name.toLowerCase() === genreOrCategory.toLowerCase()
           );
+          console.log(foundGenre);
 
           if (foundGenre) {
             navigate("/");
@@ -39,26 +38,14 @@ function useAlan(alanBtnContainer) {
           fetchToken();
         } else if (command === "logout") {
           localStorage.clear();
-          navigate("/");
+          window.location.href = "/";
+          // navigate('/');
         } else if (command === "search") {
-          navigate("/");
           dispatch(searchMovie(query));
         }
       },
-      rootEl: alanBtnContainer.current,
     });
-
-    const buttonEl = alanBtnContainer.current;
-    buttonEl.addEventListener("click", async function () {
-      if (!greetingWasSaid) {
-        await alanBtnInstance.activate();
-        alanBtnInstance.playText(
-          "Hello! This is MovieCatch App where you can find the movies you love. To search for Movies Try saying: 'Search for Spiderman'. To go for certain category, say: 'Go to Action'. For lightmode say 'Make it light'"
-        );
-        greetingWasSaid = true;
-      }
-    });
-  }, [alanBtnContainer, dispatch, navigate, setMode]);
+  }, []);
 }
 
 export default useAlan;
