@@ -17,6 +17,7 @@ import { useGetGenresQuery } from "../../services/TMDB";
 import genreIcons from "../../assets/genres";
 import { selectGenreOrCategory } from "../../features/currentGenreOrCategory";
 import { LoadingCircle } from "..";
+import RenderIfVisible from "react-render-if-visible";
 
 const categories = [
   { label: "Popular", value: "popular" },
@@ -38,7 +39,7 @@ function SideBar({ setMobileOpen }) {
   }, [genreIdOrCategoryName]);
 
   return (
-    <div className={classes.sideBarContainer}>
+    <>
       <Link to="/" className={classes.imageLink}>
         <img
           className={classes.image}
@@ -76,36 +77,38 @@ function SideBar({ setMobileOpen }) {
         ))}
       </List>
       <Divider />
-      <List>
+      <List aria-label="Genres">
         <ListSubheader>Genres</ListSubheader>
         {isFetching ? (
           <LoadingCircle />
         ) : (
           data.genres.map(({ name, id }) => (
             <ListSubheader key={name}>
-              <Link className={classes.links} to="/">
-                <ListItemButton
-                  onClick={() => dispatch(selectGenreOrCategory(id))}
-                >
-                  <ListItemIcon>
-                    <img
-                      alt={name.toLowerCase()}
-                      src={genreIcons[name.toLowerCase()]}
-                      className={classes.genreImage}
-                      height={30}
-                      width={30}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={name} />
-                </ListItemButton>
-              </Link>
+              <RenderIfVisible defaultHeight={48}>
+                <Link className={classes.links} to="/">
+                  <ListItemButton
+                    onClick={() => dispatch(selectGenreOrCategory(id))}
+                  >
+                    <ListItemIcon>
+                      <img
+                        alt={name.toLowerCase()}
+                        src={genreIcons[name.toLowerCase()]}
+                        className={classes.genreImage}
+                        height={30}
+                        width={30}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={name} />
+                  </ListItemButton>
+                </Link>
+              </RenderIfVisible>
             </ListSubheader>
           ))
         )}
       </List>
       <Divider />
-      <div className={classes.copyright}>
-        <p className="p-text">
+      <>
+        <p className={`${classes.copyright} p-text`}>
           {new Date().getFullYear()} &copy;{" "}
           <Button
             target="_blank"
@@ -120,8 +123,8 @@ function SideBar({ setMobileOpen }) {
           <br />
           All rights reserved
         </p>
-      </div>
-    </div>
+      </>
+    </>
   );
 }
 

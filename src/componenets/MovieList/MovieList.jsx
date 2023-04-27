@@ -1,7 +1,7 @@
-import { Grid } from '@mui/material';
-import React from 'react';
-import { Movie } from '..';
-import useStyles from './styles';
+import { Grid } from "@mui/material";
+import React from "react";
+import useStyles from "./styles";
+import Movie from "../Movie/Movie";
 
 function MovieList({ movies, numberOfMovies, excludeFirst }) {
   const classes = useStyles();

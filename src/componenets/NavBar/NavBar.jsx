@@ -79,7 +79,7 @@ function NavBar() {
             {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
           {!isMobile && <Search />}
-          <div>
+          <>
             {!isAuthenticated ? (
               <Button
                 style={{ minWidth: "0", padding: "0" }}
@@ -105,11 +105,11 @@ function NavBar() {
                 />
               </Button>
             )}
-          </div>
+          </>
           {isMobile && <Search />}
         </Toolbar>
       </AppBar>
-      <div>
+      <>
         <nav className={classes.drawer}>
           {isMobile ? (
             <Drawer
@@ -132,7 +132,7 @@ function NavBar() {
             </Drawer>
           )}
         </nav>
-      </div>
+      </>
     </>
   );
 }

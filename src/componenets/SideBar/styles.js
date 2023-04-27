@@ -1,9 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
 export default makeStyles((theme) => ({
-  sideBarContainer: {
-    background: theme.palette.mode === "dark" && "#121212",
-  },
   imageLink: {
     display: "flex",
     justifyContent: "center",

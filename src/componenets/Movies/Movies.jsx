@@ -47,6 +47,7 @@ function Movies() {
               ? images.blueNotFound
               : images.redNotFound
           }
+          alt="Data Not Found"
         />
       </Box>
     );
@@ -54,7 +55,7 @@ function Movies() {
 
   if (error) return "An error has occured.";
   return (
-    <div>
+    <>
       <FeaturedMovies movies={data.results.slice(0, 3)} />
       <MovieList movies={data} numberOfMovies={numberOfMovies} />
       <Pagination
@@ -62,7 +63,7 @@ function Movies() {
         totalPages={data?.total_pages}
         setPage={setPage}
       />
-    </div>
+    </>
   );
 }
 

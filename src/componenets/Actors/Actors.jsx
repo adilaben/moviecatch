@@ -9,6 +9,7 @@ import {
 import useStyles from "./styles";
 import { MovieList, LoadingCircle, Pagination } from "..";
 import getAge from "../../utils/getAge";
+import images from "../../assets";
 
 function Actors() {
   const { id } = useParams();
@@ -33,7 +34,7 @@ function Actors() {
   }
 
   return (
-    <div>
+    <>
       <Grid container className={classes.containerSpaceAround}>
         <Grid
           style={{
@@ -47,14 +48,19 @@ function Actors() {
           lg={3}
         >
           <img
-            className={classes.image}
-            src={`https://image.tmdb.org/t/p/w500/${data?.profile_path}`}
             alt={data?.name}
+            className={classes.image}
+            src={
+              data?.profile_path
+                ? `https://image.tmdb.org/t/p/w500/${data?.profile_path}`
+                : images.posterNotFound
+            }
+            height={450}
+            width={300}
           />
         </Grid>
         <Grid item container direction="column" lg={7}>
-          <Typography variant="h3" align="center" gutterBottom>
-            {" "}
+          <Typography variant="h4" align="center" gutterBottom>
             {data?.name}
           </Typography>
           <Grid
@@ -68,7 +74,7 @@ function Actors() {
             }}
           >
             {data?.birthday ? (
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h5" gutterBottom>
                 <span style={{ fontWeight: "bold" }}>Born : </span>
                 {new Date(data?.birthday).toDateString()}
                 {!data?.deathday && (
@@ -77,13 +83,13 @@ function Actors() {
               </Typography>
             ) : null}
             {data?.place_of_birth ? (
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h5" gutterBottom>
                 <span style={{ fontWeight: "bold" }}> Place of Birth :</span>
                 {data?.place_of_birth}
               </Typography>
             ) : null}
             {data?.deathday ? (
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h5" gutterBottom>
                 <span style={{ fontWeight: "bold" }}>Died : </span>
                 {new Date(data?.deathday).toDateString()} (age{" "}
                 {getAge(new Date(data?.birthday)) -
@@ -131,7 +137,7 @@ function Actors() {
         <Grid>
           <Typography
             style={{ marginTop: "10px" }}
-            variant="h4"
+            variant="h5"
             gutterBottom
             align="center"
           >
@@ -145,7 +151,7 @@ function Actors() {
           />
         </Grid>
       ) : null}
-    </div>
+    </>
   );
 }
 

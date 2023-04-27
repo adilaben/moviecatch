@@ -58,7 +58,9 @@ function FeaturedMovies({ movies }) {
               alt={movie.title}
               image={
                 movie.backdrop_path
-                  ? `https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`
+                  ? `https://image.tmdb.org/t/p/${
+                      isMobile ? "w500" : "w1280"
+                    }/${movie?.backdrop_path}`
                   : `https://image.tmdb.org/t/p/w500/${movie?.poster_path}`
               }
               title={movie.title}

@@ -70,6 +70,7 @@ function Profile() {
                 ? images.bluePopcorn
                 : images.redPopcorn
             }
+            alt="Add favorites or watchlist"
           />
         </Box>
       ) : (

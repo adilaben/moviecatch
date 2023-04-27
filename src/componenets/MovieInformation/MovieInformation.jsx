@@ -9,6 +9,7 @@ import {
   Rating,
   Modal,
   Tooltip,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Movie as MovieIcon,
@@ -41,6 +42,7 @@ function MovieInformation() {
   const [open, setOpen] = useState(false);
   const classes = useStyles();
   const dispatch = useDispatch();
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const { data, isFetching, error } = useGetMovieQuery(id);
   const { data: favoriteMovies } = useGetListQuery({
@@ -137,17 +139,19 @@ function MovieInformation() {
             className={classes.poster}
             src={
               data?.poster_path
-                ? `https://image.tmdb.org/t/p/w500/${data?.poster_path}`
+                ? `https://image.tmdb.org/t/p/w300/${data?.poster_path}`
                 : images.posterNotFound
             }
             alt={data?.title}
+            height={450}
+            width={300}
           />
         </Grid>
         <Grid item container direction="column" lg={7}>
           <Typography variant="h4" align="center" gutterBottom>
             {data?.title} ({data?.release_date.split("-")[0]})
           </Typography>
-          <Typography variant="h6" align="center" gutterBottom>
+          <Typography variant="h5" align="center" gutterBottom>
             {data?.tagline}
           </Typography>
           <Grid item className={classes.containerSpaceAround}>
@@ -164,7 +168,7 @@ function MovieInformation() {
                 {data?.vote_average} / 10
               </Typography>
             </Box>
-            <Typography variant="h6" gutterBottom align="center">
+            <Typography variant="subtitle1" gutterBottom align="center">
               {data?.runtime} min | Language: {data?.spoken_languages[0]?.name}
             </Typography>
           </Grid>
@@ -180,6 +184,8 @@ function MovieInformation() {
                   src={genreIcons[genre.name.toLowerCase()]}
                   className={classes.genreImage}
                   height={30}
+                  width={30}
+                  alt={genre.name.toLowerCase()}
                 />
                 <Typography color="textPrimary" variant="subtitle1">
                   {genre?.name}
@@ -290,7 +296,7 @@ function MovieInformation() {
       {data?.credits?.cast?.length ? (
         <Typography
           style={{ marginTop: "15px" }}
-          variant="h4"
+          variant="h5"
           gutterBottom
           align="center"
         >
@@ -319,8 +325,12 @@ function MovieInformation() {
                   >
                     <img
                       className={classes.castImage}
-                      src={`https://image.tmdb.org/t/p/w500/${character.profile_path}`}
+                      src={`https://image.tmdb.org/t/p/${
+                        isMobile ? "w185" : "w300"
+                      }/${character.profile_path}`}
                       alt={character.name}
+                      height={160}
+                      width={160}
                     />
                     <Typography className={classes.title} color="textPrimary">
                       {character?.name}
@@ -337,8 +347,8 @@ function MovieInformation() {
         {recommendations?.results?.length ? (
           <Grid>
             <Typography
-              style={{ marginTop: "10px" }}
-              variant="h4"
+              style={{ marginTop: "15px" }}
+              variant="h5"
               gutterBottom
               align="center"
             >
