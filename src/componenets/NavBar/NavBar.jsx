@@ -85,6 +85,7 @@ function NavBar() {
                 style={{ minWidth: "0", padding: "0" }}
                 color="inherit"
                 onClick={fetchToken}
+                aria-label="Login"
               >
                 {!isMobile && "Login"} &nbsp; <AccountCircle />
               </Button>

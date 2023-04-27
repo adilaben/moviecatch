@@ -1,17 +1,50 @@
 import React from "react";
-import { Box, Typography, Card, CardContent, CardMedia } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  useMediaQuery,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
-
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./styles";
+import { useTheme } from "@mui/styles";
 
 function FeaturedMovies({ movies }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   if (!movies) return null;
 
   return (
-    <Carousel duration={200} autoPlay>
+    <Carousel
+      duration={200}
+      autoPlay
+      NextIcon={<ArrowForwardIcon />}
+      PrevIcon={<ArrowBackIcon />}
+      navButtonsProps={{
+        style: {
+          padding: "12px",
+        },
+      }}
+      indicatorIconButtonProps={{
+        style: {
+          padding: isMobile && "10px",
+          color: theme.palette.mode === "light" ? "#05CBFC" : "#EAB7B7",
+        },
+      }}
+      activeIndicatorIconButtonProps={{
+        style: {
+          backgroundColor:
+            theme.palette.mode === "light" ? "#3582D8" : "#bf151d",
+        },
+      }}
+    >
       {movies.map((movie, i) => (
         <Box
           key={i}
